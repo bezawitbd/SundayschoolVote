@@ -74,6 +74,10 @@
                         </select>
                     </div>
                     <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">መለያ ቁጥር *</label>
+                        <input type="number" id="idNumber" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1">እድሜ *</label>
                         <input type="number" id="age" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
                     </div>
@@ -92,6 +96,10 @@
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1">የስራ ዘርፍ *</label>
                         <input type="text" id="jobSector" placeholder="የስራ ዘርፍ" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">የመስሪያ ቤት ስም *</label>
+                        <input type="text" id="jobOffice" placeholder="የመስሪያ ቤት ስም" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1">የአባሉ ስልክ ቁጥር *</label>
@@ -135,12 +143,14 @@
                         <thead>
                             <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
                                 <th class="p-3 font-semibold">ፎቶ</th>
+                                 <th class="p-3 font-semibold">መለያ ቁጥር </th>
                                 <th class="p-3 font-semibold">ሙሉ ስም</th>
                                 <th class="p-3 font-semibold">የክርስትና ስም</th>
                                 <th class="p-3 font-semibold">ጾታ</th>
                                 <th class="p-3 font-semibold">እድሜ</th>
                                 <th class="p-3 font-semibold">የልደት ዘመን</th>
                                 <th class="p-3 font-semibold">የስራ ዘርፍ</th>
+                                 <th class="p-3 font-semibold">የመስሪያ ቤት ስም</th>
                                 <th class="p-3 font-semibold text-center">ድርጊት</th>
                             </tr>
                         </thead>
@@ -265,7 +275,9 @@
                         candidates[index].joinYear = document.getElementById('joinYear').value;
                         candidates[index].phoneNumber = document.getElementById('phoneNumber').value;
                         candidates[index].jobSector = document.getElementById('jobSector').value;
+                        candidates[index].jobOffice = document.getElementById('jobOffice').value;
                         candidates[index].experience = document.getElementById('experience').value;
+                        candidates[index].idNumber = document.getElementById('idNumber').value;
                         if (photoBase64) {
                             candidates[index].photo = photoBase64;
                         }
@@ -283,7 +295,9 @@
                         joinYear: document.getElementById('joinYear').value,
                         phoneNumber: document.getElementById('phoneNumber').value,
                         jobSector: document.getElementById('jobSector').value,
+                        jobOffice: document.getElementById('jobOffice').value,
                         experience: document.getElementById('experience').value,
+                        idNumber: document.getElementById('idNumber').value,
                         photo: photoBase64 || ""
                     };
                     candidates.push(newCandidate);
@@ -319,7 +333,9 @@
             document.getElementById('joinYear').value = cand.joinYear;
             document.getElementById('phoneNumber').value = cand.phoneNumber;
             document.getElementById('jobSector').value = cand.jobSector;
+            document.getElementById('jobOffice').value = cand.jobOffice;
             document.getElementById('experience').value = cand.experience;
+            document.getElementById('idNumber').value = cand.idNumber;
 
             if (cand.photo) {
                 document.getElementById('photoStatus').innerText = "ነባር ፎቶ ተያይዟል (ለመቀየር አዲስ ይምረጡ)";
@@ -379,10 +395,12 @@
                     <td class="p-3">${photoHtml}</td>
                     <td class="p-3 font-bold text-slate-900">${c.fullName}</td>
                     <td class="p-3 text-slate-700">${c.christianName}</td>
+                    <td class="p-3 text-sm">${c.idNumber}</td>
                     <td class="p-3 text-sm">${c.gender}</td>
                     <td class="p-3 text-sm">${c.age} ዓመት</td>
                     <td class="p-3 text-sm">${c.birthYear || '—'}</td>
                     <td class="p-3 text-sm">${c.jobSector}</td>
+                    <td class="p-3 text-sm">${c.jobOffice}</td>
                     <td class="p-3 text-center flex justify-center gap-2">
                         <button onclick="editCandidate('${c.id}')" class="text-amber-600 hover:text-amber-900 text-sm font-semibold border border-amber-200 hover:border-amber-400 px-3 py-1 rounded transition">✏️ አስተካክል</button>
                         <button onclick="deleteCandidate('${c.id}')" class="text-rose-600 hover:text-rose-900 text-sm font-semibold border border-rose-200 hover:border-rose-400 px-3 py-1 rounded transition">🗑️ ሰርዝ</button>
@@ -466,6 +484,11 @@
                         <div class="grid grid-cols-2 gap-4">
                             <!-- Row 1 -->
                             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 shadow-md">
+                                <span class="text-xs font-medium text-slate-400 block mb-1">መለያ ቁጥር</span>
+                                <span class="text-lg text-white font-bold tracking-wide">${cand.idNumber}</span>
+                            </div>
+                            <!-- Row 2 -->
+                            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 shadow-md">
                                 <span class="text-xs font-medium text-slate-400 block mb-1">እድሜ</span>
                                 <span class="text-lg text-white font-bold tracking-wide">${cand.age} ዓመት</span>
                             </div>
@@ -474,7 +497,7 @@
                                 <span class="text-lg text-white font-bold tracking-wide">${cand.gender}</span>
                             </div>
                             
-                            <!-- Row 2 -->
+                            <!-- Row 3 -->
                             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 shadow-md">
                                 <span class="text-xs font-medium text-slate-400 block mb-1">የልደት ዘመን</span>
                                 <span class="text-sm text-slate-200 font-semibold tracking-wide">${cand.birthYear || '—'}</span>
@@ -484,7 +507,7 @@
                                 <span class="text-sm text-slate-200 font-semibold tracking-wide">${cand.joinYear}</span>
                             </div>
 
-                            <!-- Row 3 -->
+                            <!-- Row 4 -->
                             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 shadow-md">
                                 <span class="text-xs font-medium text-slate-400 block mb-1">የትምህርት ደረጃ</span>
                                 <span class="text-sm text-slate-200 font-semibold leading-snug">${cand.education}</span>
@@ -492,6 +515,10 @@
                             <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 shadow-md">
                                 <span class="text-xs font-medium text-slate-400 block mb-1">የስራ ዘርፍ</span>
                                 <span class="text-sm text-slate-200 font-semibold">${cand.jobSector}</span>
+                            </div>
+                            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 shadow-md">
+                                <span class="text-xs font-medium text-slate-400 block mb-1">የመስሪያ ቤት ስም </span>
+                                <span class="text-sm text-slate-200 font-semibold">${cand.jobOffice}</span>
                             </div>
                         </div>
 
@@ -603,6 +630,8 @@
 
                     // 3-Row Information Matrices
                     // Row 1: እድሜ & ጾታ
+                        
+
                     slide.addShape(pptx.ShapeType.roundRect, { x: 4.5, y: 1.6, w: 3.9, h: 0.7, fill: cardBgColor, radius: 0.05 });
                     slide.addText("እድሜ", { x: 4.7, y: 1.63, w: 3.5, h: 0.2, fontSize: 10, color: textMuted });
                     slide.addText(`${cand.age} ዓመት`, { x: 4.7, y: 1.88, w: 3.5, h: 0.3, fontSize: 13, color: textWhite, bold: true });
@@ -628,6 +657,12 @@
                     slide.addShape(pptx.ShapeType.roundRect, { x: 8.8, y: 3.3, w: 3.9, h: 0.7, fill: cardBgColor, radius: 0.05 });
                     slide.addText("የስራ ዘርፍ", { x: 9.0, y: 3.33, w: 3.5, h: 0.2, fontSize: 10, color: textMuted });
                     slide.addText(cand.jobSector, { x: 9.0, y: 3.58, w: 3.5, h: 0.3, fontSize: 11, color: textWhite, bold: true });
+                    
+                    slide.addShape(pptx.ShapeType.roundRect, { x: 8.8, y: 3.3, w: 3.9, h: 0.7, fill: cardBgColor, radius: 0.05 });
+                    slide.addText("የመስሪያ ቤት ስም", { x: 9.0, y: 3.33, w: 3.5, h: 0.2, fontSize: 10, color: textMuted });
+                    slide.addText(cand.jobOffice, { x: 9.0, y: 3.58, w: 3.5, h: 0.3, fontSize: 11, color: textWhite, bold: true });
+
+
 
                     // Bottom Row Vision description text frame
                     slide.addShape(pptx.ShapeType.roundRect, { x: 4.5, y: 4.15, w: 8.2, h: 1.9, fill: cardBgColor, radius: 0.05 });
