@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የደብረ መዊዕ ቅዱስ ሚካኤል ካቴድራል ፈለገ ዮርዳኖስ ሰ/ት/ቤት</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Ethiopic and English typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Ethiopic:wght=400;700&family=Playfair+Display:wght=600;800&family=Inter:wght=400;500;600&display=swap" rel="stylesheet">
+    <!-- html2pdf.js for multi-page PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Modern PPTX library matching latest specs -->
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Serif Ethiopic', sans-serif;
+            background-color: #f8fafc;
+        }
+        .serif-title {
+            font-family: 'Playfair Display', 'Noto Serif Ethiopic', serif;
+        }
+        .slide-container {
+            width: 1120px;
+            height: 630px;
+            aspect-ratio: 16 / 9;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <nav class="bg-slate-900 text-white px-6 py-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
+    <div class="flex items-center space-x-3">
+        <img src="C:\Users\bezaw\OneDrive\Desktop\logo.jpg" alt="ፈለገ ዮርዳኖስ ሰንበት ትምህርት ቤት" class="h-12 w-12 object-contain rounded-full bg-white p-0.5">
+        
+        <h1 class="text-xl font-bold serif-title tracking-wide">የደብረ መዊዕ ቅዱስ ሚካኤል ካቴድራል ፈለገ ዮርዳኖስ ሰ/ት/ቤት</h1>
+    </div>
+    <div class="flex space-x-2">
+        <button onclick="switchView('dashboard')" id="btn-dashboard" class="px-4 py-2 rounded bg-amber-500 text-slate-950 font-semibold transition">የእጩዎች ማስተዳደሪያ (Dashboard)</button>
+        <button onclick="switchView('presentation')" id="btn-presentation" class="px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-amber-400 font-semibold transition flex items-center gap-1">💻 የስላይድ ማሳያ (Slides)</button>
+    </div>
+</nav>
+
+    <!-- MAIN APP WRAPPER -->
+    <main class="max-w-7xl mx-auto p-6">
+
+        <!-- ========================================== -->
+        <!-- DASHBOARD VIEW: ADD/EDIT/MANAGE CANDIDATES -->
+        <!-- ========================================== -->
+        <div id="view-dashboard" class="space-y-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 id="formTitle" class="text-2xl font-bold text-slate-900 mb-6 serif-title border-b pb-2 flex items-center gap-2 text-emerald-700">
+                    እጩ መመዝገቢያ ፎርም
+                </h2>
+                
+                <form id="candidateForm" onsubmit="saveCandidate(event)" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <input type="hidden" id="editId" value="">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">ሙሉ ስም *</label>
+                        <input type="text" id="fullName" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">የክርስትና ስም *</label>
+                        <input type="text" id="christianName" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">ጾታ *</label>
+                        <select id="gender" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                            <option value="ወንድ">ወንድ</option>
+                            <option value="ሴት">ሴት</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">እድሜ *</label>
+                        <input type="number" id="age" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">የልደት ዘመን *</label>
+                        <input type="text" id="birthYear" placeholder="የልደት ዘመን" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">ወደ ሀ ወጣት ክፍል የገቡበት ዘመን *</label>
+                        <input type="text" id="joinYear" placeholder="ወደ ሀ ወጣት ክፍል የገቡበት ዘመን" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">የትምህርት ደረጃ *</label>
+                        <input type="text" id="education" placeholder="የትምህርት ደረጃ" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">የስራ ዘርፍ *</label>
+                        <input type="text" id="jobSector" placeholder="የስራ ዘርፍ" required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">የአባሉ ስልክ ቁጥር *</label>
+                        <input type="tel" id="phoneNumber" placeholder="09..." required class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">ፎቶግራፍ መምረጫ</label>
+                        <input type="file" id="photoInput" accept="image/*" class="w-full border p-1.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none bg-slate-50">
+                        <span id="photoStatus" class="text-xs text-slate-400 mt-1 block"></span>
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">አገልግሎትና ራዕይ *</label>
+                        <textarea id="experience" rows="3" required placeholder="አገልግሎትና ራዕይ" class="w-full border p-2.5 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"></textarea>
+                    </div>
+                    <div class="md:col-span-3 flex justify-end gap-2">
+                        <button type="button" id="cancelEditBtn" onclick="resetForm()" class="hidden bg-slate-500 hover:bg-slate-600 text-white font-bold px-6 py-3 rounded-lg transition shadow-sm">
+                            ❌ ሰርዝ (Cancel)
+                        </button>
+                        <button type="submit" id="submitBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-lg transition shadow-sm">
+                             እጩውን መዝግብ / አስቀምጥ
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- REGISTERED LIST -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex flex-wrap justify-between items-center mb-4 border-b pb-2 gap-2">
+                    <h2 class="text-2xl font-bold text-slate-900 serif-title"> የተመዘገቡ እጩዎች ዝርዝር</h2>
+                    <div class="flex space-x-2">
+                        <button onclick="exportAllToPPTX()" class="bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold px-4 py-2 rounded-lg flex items-center gap-1 transition">
+                            ወደ direct .PPSX (ስላይድ ሾው) ቀይር
+                        </button>
+                        <button onclick="exportAllToPDF()" class="bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold px-4 py-2 rounded-lg flex items-center gap-1 transition">
+                            ወደ PDF ቀይር
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
+                                <th class="p-3 font-semibold">ፎቶ</th>
+                                <th class="p-3 font-semibold">ሙሉ ስም</th>
+                                <th class="p-3 font-semibold">የክርስትና ስም</th>
+                                <th class="p-3 font-semibold">ጾታ</th>
+                                <th class="p-3 font-semibold">እድሜ</th>
+                                <th class="p-3 font-semibold">የልደት ዘመን</th>
+                                <th class="p-3 font-semibold">የስራ ዘርፍ</th>
+                                <th class="p-3 font-semibold text-center">ድርጊት</th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidateTableBody" class="divide-y divide-slate-100 text-slate-600">
+                            <!-- Injected dynamically via JS -->
+                        </tbody>
+                    </table>
+                    <div id="emptyState" class="text-center py-10 text-slate-400 hidden">
+                        ምንም የተመዘገበ እጩ የለም። እባክዎ ከላይ ያለውን ፎርም በመጠቀም እጩዎችን ይመዝግቡ።
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PRESENTATION VIEW: 16:9 SLIDES              -->
+        <!-- ========================================== -->
+        <div id="view-presentation" class="hidden flex flex-col items-center space-y-6">
+            
+            <div class="bg-slate-900 text-white p-4 rounded-xl shadow flex flex-wrap justify-between items-center w-full max-w-[1120px] gap-4">
+                <div class="flex items-center space-x-2">
+                    <button onclick="prevSlide()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 font-bold rounded text-amber-400 transition">◀ ቀዳሚ</button>
+                    <span id="slideIndicator" class="text-sm font-medium tracking-wide">ስላይድ 1 / 1</span>
+                    <button onclick="nextSlide()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 font-bold rounded text-amber-400 transition">ቀጣይ ▶</button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="openFullscreen()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 font-bold rounded text-white transition text-sm flex items-center gap-1">
+                        ሙሉ ስክሪን አሳይ (Full Screen)
+                    </button>
+                    <button onclick="downloadCurrentSlidePDF()" class="bg-amber-500 text-slate-950 hover:bg-amber-400 font-bold px-4 py-2 rounded transition text-sm">
+                        ይህንን ስላይድ ወደ PDF ቀይር
+                    </button>
+                </div>
+            </div>
+
+            <div class="border shadow-2xl bg-white rounded-lg overflow-hidden select-none">
+                <div id="slideViewport" class="slide-container bg-slate-950 text-white p-12 relative flex flex-col justify-between overflow-hidden">
+                    <!-- Content injected via JS -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="pdfPrintContainer" class="absolute left-[-9999px] top-[-9999px]"></div>
+
+    <script>
+        let candidates = [];
+        let currentSlideIndex = 0;
+
+        const seedData = [
+            {
+                id: "seed-1",
+                fullName: "ወይዘሪት አስቴር በቀለ",
+                christianName: "ወለተ ማርያም",
+                gender: "ሴት",
+                age: "27",
+                birthYear: "1991 ዓ.ም",
+                education: "በኮምፒውተር ሳይንስ የማስተርስ ዲግሪ",
+                joinYear: "ጥቅምት 2018 ዓ.ም",
+                phoneNumber: "+251 911 223344",
+                jobSector: "የሲስተምስ መሃንዲስ (Systems Engineer)",
+                experience: "የሰንበት ትምህርት ቤቱን የተማሪዎች መረዳዳት ማዘመንና የአይቲ መሠረተ ልማትን በጥራት መዘርጋት ዋና ዕቅዴና ራዕዬ ነው።",
+                photo: ""
+            }
+        ];
+
+        window.onload = function() {
+            const stored = localStorage.getItem('sunday_school_candidates');
+            if (stored) {
+                candidates = JSON.parse(stored);
+            } else {
+                candidates = [...seedData];
+                saveToLocalStorage();
+            }
+            renderDashboard();
+            renderSlide();
+
+            window.addEventListener('keydown', function(e) {
+                if (document.getElementById('view-presentation').classList.contains('hidden')) return;
+                if (e.key === 'ArrowRight') nextSlide();
+                if (e.key === 'ArrowLeft') prevSlide();
+            });
+        };
+
+        function saveToLocalStorage() {
+            localStorage.setItem('sunday_school_candidates', JSON.stringify(candidates));
+        }
+
+        function switchView(view) {
+            if (view === 'dashboard') {
+                document.getElementById('view-dashboard').classList.remove('hidden');
+                document.getElementById('view-presentation').classList.add('hidden');
+                document.getElementById('btn-dashboard').className = "px-4 py-2 rounded bg-amber-500 text-slate-950 font-semibold transition";
+                document.getElementById('btn-presentation').className = "px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-amber-400 font-semibold transition flex items-center gap-1";
+                renderDashboard();
+            } else {
+                document.getElementById('view-dashboard').classList.add('hidden');
+                document.getElementById('view-presentation').classList.remove('hidden');
+                document.getElementById('btn-dashboard').className = "px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-amber-400 font-semibold transition";
+                document.getElementById('btn-presentation').className = "px-4 py-2 rounded bg-amber-500 text-slate-950 font-semibold transition flex items-center gap-1";
+                currentSlideIndex = 0;
+                renderSlide();
+            }
+        }
+
+        function saveCandidate(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editId').value;
+            const photoInput = document.getElementById('photoInput');
+            
+            const processData = (photoBase64) => {
+                if (editId) {
+                    const index = candidates.findIndex(c => c.id === editId);
+                    if (index !== -1) {
+                        candidates[index].fullName = document.getElementById('fullName').value;
+                        candidates[index].christianName = document.getElementById('christianName').value;
+                        candidates[index].gender = document.getElementById('gender').value;
+                        candidates[index].age = document.getElementById('age').value;
+                        candidates[index].birthYear = document.getElementById('birthYear').value;
+                        candidates[index].education = document.getElementById('education').value;
+                        candidates[index].joinYear = document.getElementById('joinYear').value;
+                        candidates[index].phoneNumber = document.getElementById('phoneNumber').value;
+                        candidates[index].jobSector = document.getElementById('jobSector').value;
+                        candidates[index].experience = document.getElementById('experience').value;
+                        if (photoBase64) {
+                            candidates[index].photo = photoBase64;
+                        }
+                    }
+                    alert('የእጩው መረጃ በተሳካ ሁኔታ ተስተካክሏል!');
+                } else {
+                    const newCandidate = {
+                        id: 'cand-' + Date.now(),
+                        fullName: document.getElementById('fullName').value,
+                        christianName: document.getElementById('christianName').value,
+                        gender: document.getElementById('gender').value,
+                        age: document.getElementById('age').value,
+                        birthYear: document.getElementById('birthYear').value,
+                        education: document.getElementById('education').value,
+                        joinYear: document.getElementById('joinYear').value,
+                        phoneNumber: document.getElementById('phoneNumber').value,
+                        jobSector: document.getElementById('jobSector').value,
+                        experience: document.getElementById('experience').value,
+                        photo: photoBase64 || ""
+                    };
+                    candidates.push(newCandidate);
+                    alert('እጩው በተሳካ ሁኔታ ተመዝግቧል!');
+                }
+
+                saveToLocalStorage();
+                resetForm();
+                renderDashboard();
+            };
+
+            if (photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { processData(e.target.result); };
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                const existingCandidate = candidates.find(c => c.id === editId);
+                processData(existingCandidate ? existingCandidate.photo : "");
+            }
+        }
+
+        function editCandidate(id) {
+            const cand = candidates.find(c => c.id === id);
+            if (!cand) return;
+
+            document.getElementById('editId').value = cand.id;
+            document.getElementById('fullName').value = cand.fullName;
+            document.getElementById('christianName').value = cand.christianName;
+            document.getElementById('gender').value = cand.gender;
+            document.getElementById('age').value = cand.age;
+            document.getElementById('birthYear').value = cand.birthYear || "";
+            document.getElementById('education').value = cand.education;
+            document.getElementById('joinYear').value = cand.joinYear;
+            document.getElementById('phoneNumber').value = cand.phoneNumber;
+            document.getElementById('jobSector').value = cand.jobSector;
+            document.getElementById('experience').value = cand.experience;
+
+            if (cand.photo) {
+                document.getElementById('photoStatus').innerText = "ነባር ፎቶ ተያይዟል (ለመቀየር አዲስ ይምረጡ)";
+            } else {
+                document.getElementById('photoStatus').innerText = "";
+            }
+
+            document.getElementById('formTitle').innerText = "የእጩ መረጃ ማስተካከያ ፎርም";
+            document.getElementById('formTitle').className = "text-2xl font-bold mb-6 serif-title border-b pb-2 flex items-center gap-2 text-amber-600";
+            document.getElementById('submitBtn').innerText = "ለውጦችን አስቀምጥ";
+            document.getElementById('submitBtn').className = "bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-3 rounded-lg transition shadow-sm";
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('candidateForm').reset();
+            document.getElementById('editId').value = "";
+            document.getElementById('photoStatus').innerText = "";
+            document.getElementById('formTitle').innerText = "እጩ መመዝገቢያ ፎርም";
+            document.getElementById('formTitle').className = "text-2xl font-bold mb-6 serif-title border-b pb-2 flex items-center gap-2 text-emerald-700";
+            document.getElementById('submitBtn').innerText = "እጩውን መዝግብ / አስቀምጥ";
+            document.getElementById('submitBtn').className = "bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-lg transition shadow-sm";
+            document.getElementById('cancelEditBtn').className = "hidden";
+        }
+
+        function deleteCandidate(id) {
+            if (confirm('እርግጠኛ ነዎት ይህንን እጩ መሰረዝ ይፈልጋሉ?')) {
+                candidates = candidates.filter(c => c.id !== id);
+                saveToLocalStorage();
+                renderDashboard();
+            }
+        }
+
+        function renderDashboard() {
+            const tbody = document.getElementById('candidateTableBody');
+            const emptyState = document.getElementById('emptyState');
+            tbody.innerHTML = '';
+
+            if (candidates.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            candidates.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+                
+                const photoHtml = c.photo 
+                    ? `<img src="${c.photo}" class="w-12 h-12 object-cover rounded-full border border-slate-300">`
+                    : `<div class="w-12 h-12 rounded-full bg-slate-700 text-amber-400 font-bold flex items-center justify-center text-xs border border-slate-600">${c.fullName.substring(0,2)}</div>`;
+
+                tr.innerHTML = `
+                    <td class="p-3">${photoHtml}</td>
+                    <td class="p-3 font-bold text-slate-900">${c.fullName}</td>
+                    <td class="p-3 text-slate-700">${c.christianName}</td>
+                    <td class="p-3 text-sm">${c.gender}</td>
+                    <td class="p-3 text-sm">${c.age} ዓመት</td>
+                    <td class="p-3 text-sm">${c.birthYear || '—'}</td>
+                    <td class="p-3 text-sm">${c.jobSector}</td>
+                    <td class="p-3 text-center flex justify-center gap-2">
+                        <button onclick="editCandidate('${c.id}')" class="text-amber-600 hover:text-amber-900 text-sm font-semibold border border-amber-200 hover:border-amber-400 px-3 py-1 rounded transition">✏️ አስተካክል</button>
+                        <button onclick="deleteCandidate('${c.id}')" class="text-rose-600 hover:text-rose-900 text-sm font-semibold border border-rose-200 hover:border-rose-400 px-3 py-1 rounded transition">🗑️ ሰርዝ</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function getSlideCount() {
+            return 1 + candidates.length + 1;
+        }
+
+        function openFullscreen() {
+            const elem = document.getElementById("slideViewport");
+            if (elem.requestFullscreen) { elem.requestFullscreen(); } 
+            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } 
+            else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); }
+        }
+
+        function generateSlideHTML(index) {
+            const total = getSlideCount();
+            if (index === 0) {
+                return `
+                    <div class="flex-1 flex flex-col justify-center items-center text-center space-y-6">
+                        <div class="bg-amber-500/10 text-amber-400 px-4 py-1.5 rounded-full font-semibold text-xs tracking-wider border border-amber-500/30">የአስተዳደር ምርጫ መድረክ</div>
+                        <h1 class="text-5xl font-extrabold serif-title tracking-tight leading-tight max-w-4xl bg-gradient-to-r from-white to-amber-300 bg-clip-text text-transparent">የሰንበት ትምህርት ቤት የአስተዳደር ምርጫ እጩዎች መጋበዣ ስላይድ</h1>
+                        <div class="w-24 h-1 bg-amber-500 rounded-full my-2"></div>
+                        <p class="text-slate-400 max-w-xl text-base">የአባላቱን ዝርዝር፣ መንፈሳዊ ተሳትፎ እና የስራ ልምድ በመመልከት በመረጃ ላይ የተመሰረተ ውሳኔ ይስጡ።</p>
+                    </div>
+                    <div class="flex justify-between items-center text-xs text-slate-500 font-medium border-t border-slate-900 pt-4">
+                        <div>ሰንበት ትምህርት ቤት አስተዳደር</div>
+                        <div>ምርጫ 2018 ዓ.ም</div>
+                    </div>`;
+            }
+
+            if (index === total - 1) {
+                return `
+                    <div class="flex-1 flex flex-col justify-center items-center text-center space-y-6">
+                        <h2 class="text-4xl font-extrabold serif-title text-amber-400">እጩዎችን ስለተመለከቱ እናመሰግናለን!</h2>
+                        <div class="w-16 h-1 bg-slate-800 rounded-full"></div>
+                        <p class="text-slate-300 max-w-2xl text-lg">"መልካም እረኛ ነፍሱን ስለ በጎቹ ያኖራል..." — እባክዎን ድምጽዎን በጥንቃቄና በጸሎት ይስጡ።</p>
+                    </div>
+                    <div class="flex justify-between items-center text-xs text-slate-500 font-medium border-t border-slate-900 pt-4">
+                        <div>የደብረ መዊዕ ቅዱስ ሚካኤል ካቴድራል ፈለገ ዮርዳኖስ ሰ/ት/ቤት</div>
+                        <div>ማጠቃለያ ገጽ</div>
+                    </div>`;
+            }
+
+            const cand = candidates[index - 1];
+            const profileImageHtml = cand.photo 
+                ? `<img src="${cand.photo}" class="w-full h-full object-cover">`
+                : `<div class="w-full h-full bg-slate-800 flex flex-col items-center justify-center text-slate-500 p-4">
+                     <span class="text-4xl font-bold text-amber-500/80 mb-1">600 × 400</span>
+                     <span class="text-xs text-slate-400">ፎቶ አልተያያዘም</span>
+                   </div>`;
+
+            return `
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                    <h2 class="text-3xl font-bold text-white serif-title flex items-center gap-2">የእጩ መግለጫ </h2>
+                    <span class="text-xs text-slate-400 tracking-wide"></span>
+                </div>
+
+                <div class="grid grid-cols-12 gap-6 my-auto items-stretch">
+                    <!-- Left Identity Card Container -->
+                    <div class="col-span-4 flex flex-col justify-between bg-slate-900/90 p-5 rounded-xl border border-slate-800 shadow-xl text-center">
+                        <div class="w-44 h-44 rounded-full overflow-hidden border-4 border-amber-500/50 mx-auto shadow-inner flex items-center justify-center bg-slate-950">
+                            ${profileImageHtml}
+                        </div>
+                        <div class="mt-4 space-y-1">
+                            <h3 class="text-2xl font-bold text-white tracking-wide">${cand.fullName}</h3>
+                            <p class="text-sm text-amber-400 italic">${cand.christianName}</p>
+                        </div>
+                        <div class="mt-4 bg-slate-950 py-2 rounded-full border border-slate-800 max-w-[210px] mx-auto w-full">
+                            <span class="text-sm font-semibold text-amber-400 tracking-wide">📞 ${cand.phoneNumber}</span>
+                        </div>
+                    </div>
+
+                    <!-- Right Information Layout Matrices (3 Rows x 2 Columns Grid) -->
+                    <div class="col-span-8 flex flex-col justify-between space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Row 1 -->
+                            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 shadow-md">
+                                <span class="text-xs font-medium text-slate-400 block mb-1">እድሜ</span>
+                                <span class="text-lg text-white font-bold tracking-wide">${cand.age} ዓመት</span>
+                            </div>
+                            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 shadow-md">
+                                <span class="text-xs font-medium text-slate-400 block mb-1">ጾታ</span>
+                                <span class="text-lg text-white font-bold tracking-wide">${cand.gender}</span>
+                            </div>
+                            
+                            <!-- Row 2 -->
+                            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 shadow-md">
+                                <span class="text-xs font-medium text-slate-400 block mb-1">የልደት ዘመን</span>
+                                <span class="text-sm text-slate-200 font-semibold tracking-wide">${cand.birthYear || '—'}</span>
+                            </div>
+                            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 shadow-md">
+                                <span class="text-xs font-medium text-slate-400 block mb-1">ወደ ሀ ወጣት ክፍል የገቡበት</span>
+                                <span class="text-sm text-slate-200 font-semibold tracking-wide">${cand.joinYear}</span>
+                            </div>
+
+                            <!-- Row 3 -->
+                            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 shadow-md">
+                                <span class="text-xs font-medium text-slate-400 block mb-1">የትምህርት ደረጃ</span>
+                                <span class="text-sm text-slate-200 font-semibold leading-snug">${cand.education}</span>
+                            </div>
+                            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 shadow-md">
+                                <span class="text-xs font-medium text-slate-400 block mb-1">የስራ ዘርፍ</span>
+                                <span class="text-sm text-slate-200 font-semibold">${cand.jobSector}</span>
+                            </div>
+                        </div>
+
+                        <!-- Vision & Details Card Container -->
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 flex-1 flex flex-col shadow-inner">
+                            <span class="text-xs font-bold text-amber-400 block mb-1.5 uppercase tracking-wide">አገልግሎትና ራዕይ</span>
+                            <p class="text-sm text-slate-300 leading-relaxed overflow-y-auto no-scrollbar font-normal">${cand.experience}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-500 font-medium border-t border-slate-900 pt-3">
+                    <div>የእጩዎች  ማቅረቢያ</div>
+                    <div>slide ${index} from ${candidates.length}</div>
+                </div>`;
+        }
+
+        function renderSlide() {
+            const viewport = document.getElementById('slideViewport');
+            const indicator = document.getElementById('slideIndicator');
+            viewport.innerHTML = generateSlideHTML(currentSlideIndex);
+            indicator.innerText = `slide ${currentSlideIndex + 1} / ${getSlideCount()}`;
+        }
+
+        function nextSlide() { if (currentSlideIndex < getSlideCount() - 1) { currentSlideIndex++; renderSlide(); } }
+        function prevSlide() { if (currentSlideIndex > 0) { currentSlideIndex--; renderSlide(); } }
+
+        function downloadCurrentSlidePDF() {
+            const element = document.getElementById('slideViewport');
+            html2pdf().set({
+                margin: 0,
+                filename: `Sunday_School_Slide_${currentSlideIndex + 1}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'px', format: [1120, 630], orientation: 'landscape' }
+            }).from(element).save();
+        }
+
+        function exportAllToPDF() {
+            if (candidates.length === 0) return alert('እባክዎ መጀመሪያ እጩዎችን ይመዝግቡ።');
+            const printContainer = document.getElementById('pdfPrintContainer');
+            printContainer.innerHTML = '';
+            
+            for (let i = 0; i < getSlideCount(); i++) {
+                const slideWrapper = document.createElement('div');
+                slideWrapper.className = "bg-slate-950 text-white p-12 relative flex flex-col justify-between overflow-hidden";
+                slideWrapper.style.width = "1120px"; slideWrapper.style.height = "630px";
+                if (i > 0) slideWrapper.style.pageBreakBefore = "always";
+                slideWrapper.innerHTML = generateSlideHTML(i);
+                printContainer.appendChild(slideWrapper);
+            }
+
+            alert('የፒዲኤፍ (PDF) ስራ መፍጠሩ ተጀምሯል። እባክዎን ጥቂት ሰከንዶች ይጠብቁ...');
+            html2pdf().set({
+                margin: 0, filename: 'የሰንበት_ትምህርት_ቤት_ምርጫ_ሙሉ_እጩዎች_መገለጫ.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'px', format: [1120, 630], orientation: 'landscape' }
+            }).from(printContainer).save().then(() => printContainer.innerHTML = '');
+        }
+
+        // ========================================== -->
+        // POWERPOINT (.PPSX) DIRECT ENGINE LAUNCHER
+        // ========================================== -->
+        function exportAllToPPTX() {
+            if (candidates.length === 0) return alert('እባክዎ መጀመሪያ እጩዎችን ይመዝግቡ።');
+            
+            try {
+                let pptx = new window.PptxGenJS();
+                pptx.layout = 'LAYOUT_16x9'; 
+
+                const bgDarkColor = "111827";   
+                const cardBgColor = "1E293B";   
+                const textWhite = "FFFFFF";     
+                const textGold = "F59E0B";      
+                const textMuted = "94A3B8";     
+
+                // SLIDE 1: INTRO
+                let introSlide = pptx.addSlide();
+                introSlide.background = { fill: bgDarkColor };
+                introSlide.addText("የአስተዳደር ምርጫ መድረክ", { x: 1.0, y: 2.0, w: 11.3, h: 0.4, fontSize: 14, color: textGold, bold: true, align: 'center' });
+                introSlide.addText("የደብረ መዊዕ ቅዱስ ሚካኤል ካቴድራል ፈለገ ዮርዳኖስ ሰ/ት/ቤት የሥራ አመራር ተመራጭ እጩዎች", { x: 1.0, y: 2.6, w: 11.3, h: 1.5, fontSize: 32, color: textWhite, bold: true, align: 'center' });
+                introSlide.addText("የአባላቱን ዝርዝር፣ መንፈሳዊ ተሳትፎ እና የስራ ልምድ በመመልከት በመረጃ ላይ የተመሰረተ ውሳኔ ይስጡ።", { x: 2.0, y: 4.2, w: 9.3, h: 0.8, fontSize: 14, color: textMuted, align: 'center' });
+
+                // CANDIDATE PROFILE SLIDES
+                candidates.forEach((cand, i) => {
+                    let slide = pptx.addSlide();
+                    slide.background = { fill: bgDarkColor };
+
+                    // Top structural headings
+                    slide.addText("የእጩዎች መግለጫ ", { x: 0.6, y: 0.5, w: 8.0, h: 0.6, fontSize: 26, color: textWhite, bold: true });
+                    slide.addText("", { x: 9.5, y: 0.6, w: 3.2, h: 0.4, fontSize: 11, color: textMuted, align: 'right' });
+                    slide.addShape(pptx.ShapeType.line, { x: 0.6, y: 1.2, w: 12.1, h: 0.0, line: { color: "334155", width: 1.0 } });
+
+                    // Left Block Profile Frame Container
+                    slide.addShape(pptx.ShapeType.roundRect, { x: 0.6, y: 1.6, w: 3.5, h: 4.5, fill: cardBgColor, radius: 0.05 });
+                    if (cand.photo) {
+                        slide.addImage({ data: cand.photo, x: 1.35, y: 1.9, w: 2.0, h: 2.0, rounding: true });
+                    } else {
+                        slide.addShape(pptx.ShapeType.oval, { x: 1.35, y: 1.9, w: 2.0, h: 2.0, fill: "334155", line: { color: "F59E0B", width: 2.5 } });
+                        slide.addText(cand.fullName.substring(0,2), { x: 1.35, y: 2.6, w: 2.0, h: 0.5, fontSize: 24, color: textGold, bold: true, align: 'center' });
+                    }
+                    slide.addText(cand.fullName, { x: 0.7, y: 4.1, w: 3.3, h: 0.4, fontSize: 20, color: textWhite, bold: true, align: 'center' });
+                    slide.addText(cand.christianName, { x: 0.7, y: 4.5, w: 3.3, h: 0.3, fontSize: 13, color: textGold, italic: true, align: 'center' });
+
+                    // Phone Badge Pill
+                    slide.addShape(pptx.ShapeType.roundRect, { x: 1.2, y: 5.2, w: 2.3, h: 0.4, fill: "0F172A", radius: 0.3 });
+                    slide.addText(`📞 ${cand.phoneNumber}`, { x: 1.2, y: 5.25, w: 2.3, h: 0.3, fontSize: 11, color: textGold, align: 'center', bold: true });
+
+                    // 3-Row Information Matrices
+                    // Row 1: እድሜ & ጾታ
+                    slide.addShape(pptx.ShapeType.roundRect, { x: 4.5, y: 1.6, w: 3.9, h: 0.7, fill: cardBgColor, radius: 0.05 });
+                    slide.addText("እድሜ", { x: 4.7, y: 1.63, w: 3.5, h: 0.2, fontSize: 10, color: textMuted });
+                    slide.addText(`${cand.age} ዓመት`, { x: 4.7, y: 1.88, w: 3.5, h: 0.3, fontSize: 13, color: textWhite, bold: true });
+
+                    slide.addShape(pptx.ShapeType.roundRect, { x: 8.8, y: 1.6, w: 3.9, h: 0.7, fill: cardBgColor, radius: 0.05 });
+                    slide.addText("ጾታ", { x: 9.0, y: 1.63, w: 3.5, h: 0.2, fontSize: 10, color: textMuted });
+                    slide.addText(cand.gender, { x: 9.0, y: 1.88, w: 3.5, h: 0.3, fontSize: 13, color: textWhite, bold: true });
+
+                    // Row 2: የልደት ዘመን & ወደ U ወጣት ክፍል የገቡበት
+                    slide.addShape(pptx.ShapeType.roundRect, { x: 4.5, y: 2.45, w: 3.9, h: 0.7, fill: cardBgColor, radius: 0.05 });
+                    slide.addText("የልደት ዘመን", { x: 4.7, y: 2.48, w: 3.5, h: 0.2, fontSize: 10, color: textMuted });
+                    slide.addText(cand.birthYear || "—", { x: 4.7, y: 2.73, w: 3.5, h: 0.3, fontSize: 12, color: textWhite, bold: true });
+
+                    slide.addShape(pptx.ShapeType.roundRect, { x: 8.8, y: 2.45, w: 3.9, h: 0.7, fill: cardBgColor, radius: 0.05 });
+                    slide.addText("ወደ ሀ ወጣት ክፍል የገቡበት", { x: 9.0, y: 2.48, w: 3.5, h: 0.2, fontSize: 10, color: textMuted });
+                    slide.addText(cand.joinYear, { x: 9.0, y: 2.73, w: 3.5, h: 0.3, fontSize: 12, color: textWhite, bold: true });
+
+                    // Row 3: የትምህርት ደረጃ & የስራ ዘርፍ
+                    slide.addShape(pptx.ShapeType.roundRect, { x: 4.5, y: 3.3, w: 3.9, h: 0.7, fill: cardBgColor, radius: 0.05 });
+                    slide.addText("የትምህርት ደረጃ", { x: 4.7, y: 3.33, w: 3.5, h: 0.2, fontSize: 10, color: textMuted });
+                    slide.addText(cand.education, { x: 4.7, y: 3.58, w: 3.5, h: 0.3, fontSize: 11, color: textWhite, bold: true });
+
+                    slide.addShape(pptx.ShapeType.roundRect, { x: 8.8, y: 3.3, w: 3.9, h: 0.7, fill: cardBgColor, radius: 0.05 });
+                    slide.addText("የስራ ዘርፍ", { x: 9.0, y: 3.33, w: 3.5, h: 0.2, fontSize: 10, color: textMuted });
+                    slide.addText(cand.jobSector, { x: 9.0, y: 3.58, w: 3.5, h: 0.3, fontSize: 11, color: textWhite, bold: true });
+
+                    // Bottom Row Vision description text frame
+                    slide.addShape(pptx.ShapeType.roundRect, { x: 4.5, y: 4.15, w: 8.2, h: 1.9, fill: cardBgColor, radius: 0.05 });
+                    slide.addText(" አገልግሎትና ራዕይ", { x: 4.7, y: 4.22, w: 7.8, h: 0.25, fontSize: 10, color: textGold, bold: true });
+                    slide.addText(cand.experience, { x: 4.7, y: 4.52, w: 7.8, h: 1.4, fontSize: 11, color: "E2E8F0" });
+
+                    // Footer Divider Lines
+                    slide.addShape(pptx.ShapeType.line, { x: 0.6, y: 6.3, w: 12.1, h: 0.0, line: { color: "334155", width: 1.0 } });
+                    slide.addText("የእጩዎች ዝርዝር ማሳያ", { x: 0.6, y: 6.4, w: 4.0, h: 0.3, fontSize: 9, color: textMuted });
+                    slide.addText(`slide ${i + 1} from ${candidates.length}`, { x: 8.7, y: 6.4, w: 4.0, h: 0.3, fontSize: 9, color: textMuted, align: 'right' });
+                });
+
+                // OUTRO SLIDE
+                let outroSlide = pptx.addSlide();
+                outroSlide.background = { fill: bgDarkColor };
+                outroSlide.addText("እጩዎችን ስለተመለከቱ እናመሰግናለን!", { x: 1.0, y: 2.8, w: 11.3, h: 0.6, fontSize: 28, color: textGold, bold: true, align: 'center' });
+                
+                alert('(.PPSX) ማሳያ ዝግጅት ተጠናቋል። ፋይሉ በቀጥታ ሙሉ ስክሪን እንዲከፍት ተደርጓል!');
+                pptx.writeFile({ fileName: 'የሰንበት_ትምህርት_ቤቱ_ምርጫ_እጩዎች_መገለጫ_መድረክ.ppsx' });
+            } catch (err) {
+                console.error(err);
+                alert("ስህተት አጋጥሟል፡ " + err.message);
+            }
+        }
+    </script>
+</body>
+</html>
